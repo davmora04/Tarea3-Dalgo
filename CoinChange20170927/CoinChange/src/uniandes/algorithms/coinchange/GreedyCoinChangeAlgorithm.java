@@ -1,16 +1,14 @@
 package uniandes.algorithms.coinchange;
 
-import java.util.Arrays;
-
 public class GreedyCoinChangeAlgorithm implements CoinChangeAlgorithm {
 
     @Override
-    public int[] calculateOptimalChange(int totalValue, int[] denominations) {
-        int[] result = new int[denominations.length];
-        for (int i = denominations.length - 1; i >= 0; i--) {
-            result[i] = totalValue / denominations[i];
-            totalValue %= denominations[i];
+    public int[] calculateOptimalChange(int valorTotal, int[] denominaciones) {
+        int[] resultado = new int[denominaciones.length];
+        for (int i = denominaciones.length - 1; i >= 0; i--) {
+            resultado[i] = valorTotal / denominaciones[i];
+            valorTotal %= denominaciones[i];
         }
-        return result;
+        return resultado;
     }
 }

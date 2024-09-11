@@ -5,48 +5,52 @@ import java.util.Arrays;
 public class RecursiveCoinChangeAlgorithm implements CoinChangeAlgorithm {
 
     @Override
-    public int[] calculateOptimalChange(int totalValue, int[] denominations) {
-        int[] result = new int[denominations.length];
-        int[] memo = new int[totalValue + 1];
-        memo[0] = 0;  
-
-        calculateMinCoins(totalValue, denominations, memo);
-
-        reconstructResult(totalValue, denominations, result, memo);
+    public int[] calculateOptimalChange(int valorTotal, int[] denominaciones) {
+        int[] resultado = new int[denominaciones.length];
+        int[] memo = new int[valorTotal + 1];
         
-        return result;
+        Arrays.fill(memo, -1);
+        memo[0] = 0;
+
+        calcularMinMonedas(valorTotal, denominaciones, memo);
+
+        reconstruirResultado(valorTotal, denominaciones, resultado, memo);
+        
+        return resultado;
     }
 
-    private int calculateMinCoins(int totalValue, int[] denominations, int[] memo) {
-        if (memo[totalValue] != -1) {
-            return memo[totalValue];
+    private int calcularMinMonedas(int valorTotal, int[] denominaciones, int[] memo) {
+        if (valorTotal < 0) {
+            return Integer.MAX_VALUE;
+        }
+        if (memo[valorTotal] != -1) {
+            return memo[valorTotal];  
         }
 
-        int minCoins = Integer.MAX_VALUE;
+        int minMonedas = Integer.MAX_VALUE;
 
-        for (int i = 0; i < denominations.length; i++) {
-            int coin = denominations[i];
-            if (coin <= totalValue) {
-                int currentCoins = calculateMinCoins(totalValue - coin, denominations, memo);
+        for (int i = 0; i < denominaciones.length; i++) {
+            int moneda = denominaciones[i];
+            if (moneda <= valorTotal) {
+                int monedasActuales = calcularMinMonedas(valorTotal - moneda, denominaciones, memo);
     
-                if (currentCoins != Integer.MAX_VALUE) {
-                    minCoins = Math.min(minCoins, currentCoins + 1);
+                if (monedasActuales != Integer.MAX_VALUE) {
+                    minMonedas = Math.min(minMonedas, monedasActuales + 1);
                 }
             }
         }
 
-        memo[totalValue] = minCoins;
-        return minCoins;
+        memo[valorTotal] = minMonedas;
+        return minMonedas;
     }
 
-    private void reconstructResult(int totalValue, int[] denominations, int[] result, int[] memo) {
-        
-        while (totalValue > 0) {
-            for (int i = 0; i < denominations.length; i++) {
-                int coin = denominations[i];
-                if (coin <= totalValue && memo[totalValue - coin] == memo[totalValue] - 1) {
-                    result[i]++;
-                    totalValue -= coin;
+    private void reconstruirResultado(int valorTotal, int[] denominaciones, int[] resultado, int[] memo) {
+        while (valorTotal > 0) {
+            for (int i = 0; i < denominaciones.length; i++) {
+                int moneda = denominaciones[i];
+                if (moneda <= valorTotal && memo[valorTotal - moneda] == memo[valorTotal] - 1) {
+                    resultado[i]++;
+                    valorTotal -= moneda;
                     break;
                 }
             }

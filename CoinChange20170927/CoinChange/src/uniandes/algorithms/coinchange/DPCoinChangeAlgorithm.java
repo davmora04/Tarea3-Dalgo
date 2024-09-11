@@ -7,27 +7,27 @@ public class DPCoinChangeAlgorithm implements CoinChangeAlgorithm {
     @Override
     public int[] calculateOptimalChange(int totalValue, int[] denominations) {
         int[] dp = new int[totalValue + 1];
-        int[] coinUsed = new int[totalValue + 1];
+        int[] monedasUsadas = new int[totalValue + 1];
         Arrays.fill(dp, totalValue + 1);
         dp[0] = 0;
 
-        for (int i = 1; i <= totalValue; i++) {
-            for (int j = 0; j < denominations.length; j++) {
-                if (denominations[j] <= i) {
-                    if (dp[i - denominations[j]] + 1 < dp[i]) {
-                        dp[i] = dp[i - denominations[j]] + 1;
-                        coinUsed[i] = j;
+        for (int valorActual = 1; valorActual <= totalValue; valorActual++) {
+            for (int indiceDenominacion = 0; indiceDenominacion < denominations.length; indiceDenominacion++) {
+                if (denominations[indiceDenominacion] <= valorActual) {
+                    if (dp[valorActual - denominations[indiceDenominacion]] + 1 < dp[valorActual]) {
+                        dp[valorActual] = dp[valorActual - denominations[indiceDenominacion]] + 1;
+                        monedasUsadas[valorActual] = indiceDenominacion;
                     }
                 }
             }
         }
 
-        int[] result = new int[denominations.length];
+        int[] resultado = new int[denominations.length];
         while (totalValue > 0) {
-            int coinIndex = coinUsed[totalValue];
-            result[coinIndex]++;
-            totalValue -= denominations[coinIndex];
+            int indiceMoneda = monedasUsadas[totalValue];
+            resultado[indiceMoneda]++;
+            totalValue -= denominations[indiceMoneda];
         }
-        return result;
+        return resultado;
     }
 }
